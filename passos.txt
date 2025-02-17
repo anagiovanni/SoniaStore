@@ -15,3 +15,10 @@ dotnet add package Microsoft.EntityFrameworkCore.Tools --version 9.0.1
 dotnet add package Microsoft.AspNetCore.Identity.EntityFrameworkCore --version 9.0.1
 dotnet add package MySql.EntityFrameworkCore --version 9.0.0
 
+Arquivo .csproj
+    <Nullable>disable</Nullable>
+
+ErrorViewModel
+    tirar o ?
+
+Criar a camada de dados (Models)
