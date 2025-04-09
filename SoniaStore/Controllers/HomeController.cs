@@ -1,30 +1,53 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using SoniaStore.Data;
 using SoniaStore.Models;
+using SoniaStore.Data;
+using Microsoft.EntityFrameworkCore;
+using SoniaStore.ViewModels;
 
-namespace SoniaStore.Controllers;
+namespace GStore.Controllers;
 
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
-    private readonly AppDbContext _dbContext;
+    private readonly AppDbContext _db;
 
-    public HomeController(ILogger<HomeController> logger, AppDbContext dbContext)
+    public HomeController(ILogger<HomeController> logger, AppDbContext db)
     {
         _logger = logger;
-        _dbContext = dbContext;
+        _db = db;
     }
 
     public IActionResult Index()
     {
-        List<Produto> produtos = _dbContext.Produtos
+        List<Produto> produtos = _db.Produtos
             .Where(p => p.Destaque)
-            .Include(P => P.Fotos)
+            .Include(p => p.Fotos)
+            .ToList();
+        return View(produtos);
+    }
+
+    public IActionResult Produto(int id)
+    {
+        Produto produto = _db.Produtos
+            .Where(p => p.Id == id)
+            .Include(p => p.Categoria)
+            .Include(p => p.Fotos)
+            .SingleOrDefault();
+        
+        List<Produto> semelhantes = _db.Produtos
+            .Where(p => p.Id != id && p.CategoriaId == produto.CategoriaId)
+            .Include(p => p.Categoria)
+            .Include(p => p.Fotos)
+            .Take(4)
             .ToList();
         
-        return View(produtos);
+        ProdutoVM produtoVM = new() {
+            Produto = produto,
+            Semelhantes = semelhantes
+        };
+        
+        return View(produtoVM);
     }
 
     public IActionResult Privacy()
