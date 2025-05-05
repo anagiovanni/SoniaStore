@@ -4,7 +4,8 @@ using SoniaStore.Models;
 using SoniaStore.ViewModels;
 using System.Net.Mail;
 using System.Security.Claims;
-
+using SoniaStore.Helpers;
+using SoniaStore.Data;
 
 namespace SoniaStore.Controllers;
 
@@ -14,18 +15,21 @@ public class AccountController : Controller
     private readonly SignInManager<Usuario> _signInManager;
     private readonly UserManager<Usuario> _userManager;
     private readonly IWebHostEnvironment _host;
+    private readonly AppDbContext _db;
 
     public AccountController(
         ILogger<AccountController> logger,
         SignInManager<Usuario> signInManager,
         UserManager<Usuario> userManager,
-        IWebHostEnvironment host
+        IWebHostEnvironment host,
+        AppDbContext db
         )
     {
         _logger = logger;
         _signInManager = signInManager;
         _userManager = userManager;
         _host = host;
+        _db = db;
     }
 
     [HttpGet]
@@ -95,6 +99,49 @@ public class AccountController : Controller
     {
         RegistroVM register = new();
         return View(register);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Registro(RegistroVM registro)
+    {
+        if (ModelState.IsValid)
+        {
+            var usuario = Activator.CreateInstance<Usuario>();
+            usuario.Nome = registro.Nome;
+            usuario.DataNascimento = registro.DataNascimento;
+            usuario.UserName = registro.Email;
+            usuario.NormalizedUserName = registro.Email.ToUpper();
+            usuario.Email = registro.Email;
+            usuario.NormalizedEmail = registro.Email.ToUpper();
+            usuario.EmailConfirmed = true;
+            var result = await _userManager.CreateAsync(usuario, registro.Senha);
+
+            if (result.Succeeded)
+            {
+                _logger.LogInformation($"Novo usuário registrado com o email {registro.Email}.");
+
+                await _userManager.AddToRoleAsync(usuario, "Cliente");
+
+                if (registro.Foto != null) {
+                    string nomeArquivo = usuario.Id + Path.GetExtension(registro.Foto.FileName);
+                    string caminho = Path.Combine(_host.WebRootPath, @"img\usuarios");
+                    string novoArquivo = Path.Combine(caminho, nomeArquivo);
+                    using (var stream = new FileStream(nomeArquivo, FileMode.Create))
+                    {
+                        registro.Foto.CopyTo(stream);
+                    }
+
+                    usuario.Foto = @"\img\usuarios\" + nomeArquivo;
+                    await _db.SaveChangesAsync();
+                }
+                TempData["Success"] = "Conta criada com sucesso";
+                return RedirectToAction(nameof(Login));
+            }
+            foreach (var error in result.Errors) 
+                ModelState.AddModelError(string.Empty, TranslateIdentityErrors.TranslateErrorMenssage(error.Code));
+        }
+        return View(registro);
     }
 
     public bool IsValidEmail(string email)

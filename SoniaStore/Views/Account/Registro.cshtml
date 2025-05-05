@@ -20,17 +20,17 @@
                             <div class="col-sm-12 col-md-7">
                                 <div class="form-floating mb-3">
                                     <input class="form-control" asp-for="Nome" />
-                                    <label asp-for="Nome" class="text-danger text-sm"></label>
+                                    <label asp-for="Nome" class=" text-sm"></label>
                                     <span asp-validation-for="Nome" class="text-danger text-sm"></span>
                                 </div>
                                 <div class="form-floating mb-3">
                                     <input class="form-control" asp-for="Email" />
-                                    <label asp-for="Email" class="text-danger text-sm"></label>
+                                    <label asp-for="Email" class=" text-sm"></label>
                                     <span asp-validation-for="Email" class="text-danger text-sm"></span>
                                 </div>
                                 <div class="form-floating mb-3">
                                     <input class="form-control" asp-for="DataNascimento" />
-                                    <label asp-for="DataNascimento" class="text-danger text-sm"></label>
+                                    <label asp-for="DataNascimento" class=" text-sm"></label>
                                     <span asp-validation-for="DataNascimento" class="text-danger text-sm"></span>
                                 </div>
                                 <div class="form-floating mb-3">
@@ -45,7 +45,7 @@
                                 </div>
                             </div>
                             <div class="col-sm-12 col-md-5 cursor-pointer">
-                                <img src="/img/usuario/no-photo.png" id="PreviewImage" alt="Foto de Avatar"
+                                <img src="~/img/usuarios/no-photo.png" id="PreviewImage" alt="Foto de Avatar"
                                     class="w-100 rounded-3" onclick="changeImage()" />
                                 <div hidden>
                                     <input type="file" asp-for="Foto" accept=".jpg,.jpeg,.png,.gif,.jfif" />
