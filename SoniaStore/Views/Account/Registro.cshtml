@@ -70,7 +70,7 @@
     <script type="text/javascript">
         let mensagemErro = '';
         $(".validation-summary-errors ul li").each(function () {
-            mensagemErro += arguments $(this).text() + '<br />';
+            mensagemErro += $(this).text() + '<br />';
         });
         if (mensagemErro != '')
             swal.fire(
@@ -84,7 +84,7 @@
 
         window.addEventListener('load', function () {
             document.querySelector('input[type="file"]').addEventListener('change', function () {
-                if (this.files && arguments this.files[0]) {
+                if (this.files && this.files[0]) {
                 var img = document.getElementById('PreviewImage');
                 img.src = URL.createObjectURL(this.files[0]);
             }

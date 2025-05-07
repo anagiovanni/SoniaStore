@@ -144,6 +144,11 @@ public class AccountController : Controller
         return View(registro);
     }
 
+    public IActionResult AccessDenied()
+    {
+        return View();
+    }
+
     public bool IsValidEmail(string email)
     {
         try
