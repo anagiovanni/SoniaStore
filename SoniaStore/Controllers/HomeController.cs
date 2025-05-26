@@ -5,7 +5,7 @@ using SoniaStore.Data;
 using Microsoft.EntityFrameworkCore;
 using SoniaStore.ViewModels;
 
-namespace GStore.Controllers;
+namespace SoniaStore.Controllers;
 
 public class HomeController : Controller
 {
@@ -44,7 +44,7 @@ public class HomeController : Controller
         
         ProdutoVM produtoVM = new() {
             Produto = produto,
-            Semelhantes = semelhantes
+            Produtos = semelhantes
         };
         
         return View(produtoVM);

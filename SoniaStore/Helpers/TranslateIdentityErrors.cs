@@ -2,7 +2,7 @@ namespace SoniaStore.Helpers;
 
 public static class TranslateIdentityErrors
 {
-    public static string TranslateErrorMenssage(string codeError)
+    public static string TranslateErrorMessage(string codeError)
     {
         string message = codeError switch
         {
