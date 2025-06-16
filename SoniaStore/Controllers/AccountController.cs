@@ -27,7 +27,7 @@ public class AccountController : Controller
         SignInManager<Usuario> signInManager,
         UserManager<Usuario> userManager,
         IWebHostEnvironment host,
-        IEmailSender emailSender,
+        //IEmailSender emailSender,
         AppDbContext db
     )
     {
